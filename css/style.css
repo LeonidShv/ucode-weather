@@ -1,0 +1,140 @@
+p,
+div,
+body {
+    margin: 0;
+}
+
+.weather {
+    width: 60%;
+    margin: 100px auto;
+}
+
+.weather__week {
+    display: flex;
+    justify-content: center;
+}
+
+.weather__item {
+    padding: 20px 5px;
+    width: 17%;
+    border: 1px solid #e5e5e5;
+    border-radius: 8px;
+    margin: 0 5px;
+}
+
+.weather__day,
+.weather__month {
+    border-bottom: 1px dotted #000;
+    line-height: 14px;
+    width: fit-content;
+    margin: 0 auto;
+}
+
+.weather__date {
+    font-size: 24px;
+    line-height: 24px;
+    text-align: center;
+}
+
+.weather__date,
+.weather__day {
+    margin-bottom: 10px;
+}
+
+.weather__icon {
+    max-width: 55px;
+    display: block;
+    margin: 0 auto;
+}
+
+.weather__info {
+    display: grid;
+    grid-template-columns: auto auto;
+    grid-template-rows: auto auto;
+}
+
+.info__text {
+    color: #9d9d9d;
+    font-size: 11px;
+}
+
+.info__number {
+    font-size: 17px;
+    color: #000;
+}
+
+.info__text,
+.info__numb {
+    text-align: center;
+    display: inline-block;
+}
+
+.weather__choosen {
+    display: flex;
+}
+
+/*table*/
+.weather__today {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    width: 20%;
+}
+
+.weather__choosen {
+    margin-top: 10px;
+    padding: 10px;
+    border: 1px solid #e5e5e5;
+    border-radius: 8px;
+}
+
+.weather__details {
+    width: 80%;
+}
+
+.details__item {
+    text-align: center;
+}
+
+.details__row:nth-child(1),
+.details__row:nth-child(6),
+.details__row:nth-child(8) {
+    background: #f2f2f2;
+}
+
+.details__row:nth-child(5) .details__item {
+    font-size: 12px;
+    font-weight: bold;
+    color: #9d9d9d;
+}
+
+.details__title {
+    color: #817f7f;
+    font-weight: bold;
+}
+
+.details__row {
+    line-height: 1.5em;
+}
+
+.choosen__day,
+.choosen__month {
+    font-size: 24px;
+    width: fit-content;
+    margin: 0 auto;
+}
+
+.choosen__date {
+    font-size: 34px;
+    line-height: 24px;
+    text-align: center;
+}
+
+.choosen__date,
+.choosen__day {
+    margin-bottom: 20px;
+}
+
+.dayActive {
+    background: #e5e5e5;
+}
