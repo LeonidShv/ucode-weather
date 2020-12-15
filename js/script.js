@@ -10,13 +10,12 @@ function status(response) {
     return response.json();
   }
   
-  let url = 'http://api.openweathermap.org/data/2.5/forecast?q=kiev&appid=b426a72becfdc90d6fbc62b75fe3ef15&units=metric';
+  let url = 'https://api.openweathermap.org/data/2.5/forecast?q=kiev&appid=b426a72becfdc90d6fbc62b75fe3ef15&units=metric';
 
   fetch(url)  
     .then(status)  
     .then(json)  
     .then(function(data) {  
-      console.log('Request succeeded with JSON response', data);  
       main(data);
     }).catch(function(error) {  
       console.log('Request failed', error);  
@@ -27,15 +26,20 @@ let weekWeather;
 let weatherItems;
 
 function main(weather) {
-  console.log(weather);
   weekWeather = makeStorage(weather);
   week.innerHTML = makeWeekList(weekWeather);
   makeDayList(weekWeather[0]);
   weatherItems = document.querySelectorAll('.weather__item');
   weatherItems.forEach((day) => day.addEventListener('click', chooseDay));
+  chooseDay();
 }
 
 function chooseDay(e) {
+  if (!e) {
+    weatherItems[0].classList.add('dayActive');
+    return;
+  }
+
   let day = this.classList[1];
   weatherItems.forEach((day) => day.classList.remove('dayActive'));
 
@@ -80,23 +84,17 @@ function makeWeekItem(dayWeather) {
 }
 
 function makeStorage(weather) {
-  let day =  new Date().getDate();
-  let delFirstDay = weather.list.filter((item) => item.dt_txt.split(' ')[0].split('-')[2] > day);
-  let time = weather.list.map((item) => item.dt_txt.split(' ')[1].split(':')[0]);
   let week = [[]];
-  let times = ['00',	'03',	'06',	'09',	'12',	'15',	'18',	'21'];
 
-  for (let i = 0, k = 0; i < 32; i++) {
-    if (week[k].length === 8) {
+  for (let i = 0, k = 0; i < weather.list.length; i++) {
+    if (week[k].length === 8 || weather.list[i].dt_txt.split(' ')[1].split(':')[0] == '00') {
       k++;
       week.push([]);
     }
 
-    week[k].push(delFirstDay[i]);
-    //if (times[k] == time[i])
-    //week[k].push(weather[i]);
+    week[k].push(weather.list[i]);
   }
-  console.log(week);
+
   return week;
 }
 
@@ -121,8 +119,10 @@ function findMinMax(dayWeather) {
 }
 
 function findIcon(dayWeather, key) {
+  let middle = Math.floor(dayWeather.length / 2);
+
   if (!key) {
-    return dayWeather[4].weather[0].icon;
+    return dayWeather[middle].weather[0].icon;
   }
 }
 
@@ -181,18 +181,41 @@ function makeStorageTable(choosenDay) {
   return storage;
 }
 
+function makeFirstRow(storageTable) {
+  let tableHtml = `
+    <table class="weather__details">
+      <tr class="details__row">
+      <td class="details__item"></td>
+  `;
+
+  for (let i = 1; i < storageTable[0].length; i += 2) {
+    switch (storageTable[0][i]) {
+      case '00:00':
+      case '03:00':
+        tableHtml += `<td class="details__item" colspan="2">ночь</td>`;
+        break;
+      case '06:00':
+      case '09:00':
+        tableHtml += `<td class="details__item" colspan="2">утро</td>`;
+        break;
+      case '12:00':
+      case '15:00':
+        tableHtml += `<td class="details__item" colspan="2">день</td>`;
+        break;
+      case '18:00':
+      case '21:00':
+        tableHtml += `<td class="details__item" colspan="2">вечер</td>`;
+        break;
+    }
+  }
+
+  tableHtml += '</tr>';
+  return tableHtml;
+}
+
 function makeTableWeather(dayWeather) {
   let storageTable = makeStorageTable(dayWeather);
-  let tableHtml = `
-  <table class="weather__details">
-    <tr class="details__row">
-        <td class="details__item"></td>
-        <td class="details__item" colspan="2">ночь</td>
-        <td class="details__item" colspan="2">утро</td>
-        <td class="details__item" colspan="2">день</td>
-        <td class="details__item" colspan="2">вечер</td>
-    </tr>
-  `;
+  let tableHtml = makeFirstRow(storageTable);
 
   for (let i = 0; i < storageTable.length; i++) {
     let row = '<tr class="details__row">';
